@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Notes</title>
+</head>
+<body>
+<style>body {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background-color: #ffecf2;
+    margin: 0;
+    padding: 0;
+}
+
+.love-notes-container {
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+.love-note {
+    background-color: #fff;
+    border: 2px solid #e91e63;
+    padding: 20px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    border-radius: 15px;
+    transition: background-color 0.3s, transform 0.3s;
+    box-shadow: 0 4px 8px rgba(233, 30, 99, 0.1);
+}
+
+.love-note:hover {
+    background-color: #fce4ec;
+    transform: scale(1.02);
+}
+
+.love-note-title {
+    color: #e91e63;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.love-note-preview {
+    color: #777;
+    font-style: italic;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.love-note-full {
+    display: none;
+    color: #333;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.love-note-full.visible {
+    display: block;
+}</style>
+<div class="love-notes-container">
+    <!-- Love Note 1 -->
+    <div class="love-note" onclick="toggleLoveNote(this)">
+        <h2 class="love-note-title">Love Note 1</h2>
+        <p class="love-note-preview">Click to read the full love note!</p>
+        <p class="love-note-full hidden">
+            Your full love note content goes here. Express your feelings, memories, or anything special.
+        </p>
+    </div>
+
+    <!-- Repeat the structure for more love notes -->
+
+</div>
+
+<script>function toggleLoveNote(loveNote) {
+    loveNote.querySelector('.love-note-preview').classList.toggle('hidden');
+    loveNote.querySelector('.love-note-full').classList.toggle('visible');
+}
+</script>
+</body>
+</html>
