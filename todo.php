@@ -275,6 +275,8 @@
             
             .toDoList {
               text-align: left;
+              column-count: 2; /* Specify no. of columns */
+              list-style-type:none
             }
             .toDoList li {
               position: relative;
@@ -360,15 +362,22 @@
                   if ($item['done']==1 )
                   {
                     $query = "UPDATE list SET done = 0 WHERE id='$id'";
-                  $query_result = mysqli_query($connection, $query); //get the item using the query
+                  
                   }else
                   {
                     $query = "UPDATE list SET done = 1 WHERE id='$id'";
-                  $query_result = mysqli_query($connection, $query); //get the item using the query
+                  
                   }
-                  //header("Location:todo.php");
+                  $query_result = mysqli_query($connection, $query); //get the item using the query
+                 
 
 
+                }else if (isset($_GET['list_item_delete']))
+                {
+                  $id = $_GET['list_item_delete'];
+
+                  $query = "DELETE FROM list WHERE id='$id'";
+                  $query_result = mysqli_query($connection, $query); //delete item with that id
                 }
                 
                 
@@ -401,6 +410,10 @@
                       //echo'<a href ="todo.php?list_item_clicked=2'.$item['id'].'"><li>'.$item['title'].'</li><a>';
                       echo'<li><a href ="todo.php?list_item_clicked='.$item['id'].'">'.$item['title'].'</a></li>';
                     }
+                  }
+                    foreach ($list as $item) //show links to delete, they will be added in second row
+                  {
+                    echo '<li><a href="todo.php?list_item_delete='.$item['id'].'">[X]</a></li>';
                   }
               }
                 ?>

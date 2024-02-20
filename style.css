@@ -154,6 +154,7 @@
       bottom: 0;
       width: 100vw;
       height: 5rem;
+      
     }
   
     .logo {
@@ -179,6 +180,7 @@
       top: 0;
       width: 5rem;
       height: 100vh;
+      
     }
   
     .navbar:hover {
