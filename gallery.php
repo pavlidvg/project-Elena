@@ -157,6 +157,8 @@
         <h1>Οι φωτογραφίες μας</h1>
     <div class="gallery">
       <?php
+
+      
        if ($_SERVER['REQUEST_METHOD'] === 'GET')
        {
         if (isset($_GET['more_pics'])) //TODO: Make this a function

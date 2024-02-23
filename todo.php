@@ -331,12 +331,18 @@
             <div>
               <ul class="toDoList">
                 <?php
+                require_once __DIR__ . '/vendor/autoload.php'; // Composer autoload
+
+                $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+                $dotenv->load();
+                
+                //get credentials from .env file
+                $hostname = $_ENV['DB_HOST'];
+                $username = $_ENV['DB_USER'];
+                $password = $_ENV['DB_PASS'];
+                $database = $_ENV['DB_NAME'];
         
-        
-                $hostname = "localhost";
-                $username = "root";
-                $password = "";
-                $database = "elena_db";
+                
                 
                 // Create a database connection
                 $connection = mysqli_connect($hostname, $username, $password, $database);
