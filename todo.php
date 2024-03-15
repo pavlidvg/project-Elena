@@ -282,6 +282,7 @@
               position: relative;
               padding: 0.5rem;
               color: inherit;
+              min-height: 85px;
             }
 
             .toDoList a {
@@ -298,6 +299,7 @@
               position: relative;
               padding: 0.5rem;
               color: inherit;
+              min-height: 85px;
          
             }
 
@@ -328,6 +330,8 @@
                 <button class="button" type ="submit"><span>Πρόσθεσε</span></button>
               </div>
             </form>
+            <br>
+            <br>
             <div>
               <ul class="toDoList">
                 <?php
@@ -419,7 +423,7 @@
                   }
                     foreach ($list as $item) //show links to delete, they will be added in second row
                   {
-                    echo '<li><a href="todo.php?list_item_delete='.$item['id'].'">[X]</a></li>';
+                    echo '<li class="toDoList"><a class="toDoList" href="todo.php?list_item_delete='.$item['id'].'">[X]</a></li>';
                   }
               }
                 ?>
