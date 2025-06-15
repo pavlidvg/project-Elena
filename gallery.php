@@ -154,107 +154,50 @@
     </nav>
   
     <main>
-        <h1>Οι φωτογραφίες μας</h1>
-    <div class="gallery">
-      <?php
+    <h1>Οι φωτογραφίες μας</h1>
+    <div class="gallery" id="gallery"></div>
+    <button id="load-more" class="gallery_button">Παλαιότερες</button>
+  </main>
 
-      
-       if ($_SERVER['REQUEST_METHOD'] === 'GET')
-       {
-        if (isset($_GET['more_pics'])) //TODO: Make this a function
-        {
-          $path = "images2";
+  <script>
+    // Load JSON, display gallery, and toggle older images
+    let showMore = false;
 
-        if ($handle = opendir($path)) {
-            while (false !== ($file = readdir($handle))) {
-                if ('.' === $file) continue;
-                if ('..' === $file) continue;
-                
+    function isTall(img) {
+      return img.naturalHeight > img.naturalWidth;
+    }
 
-                // do something with the file
-                $img = 'images2/'.$file;
-                $exif = exif_read_data('images2/'.$file); //read extra data about each picture
+    function addImage(src, parent) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'image-container';
+      const img = new Image();
+      img.src = src;
+      img.onload = () => {
+        if (isTall(img)) wrapper.classList.add('tall');
+      };
+      wrapper.appendChild(img);
+      parent.appendChild(wrapper);
+    }
 
-               
-                if( isset($exif['Orientation'])&&$exif['Orientation'] == 8) {
-                    list($width, $height, $type, $attr) = getimagesize($img);
-                }else{
-                    list($height, $width, $type, $attr) = getimagesize($img);
-                }
-                
-                
-                
-            
-                
-            
-                if ($width > $height )
-                {
-                   // echo 'image '.$file.':   '.$width.'--'.$height. 'width bigger <br>';
-                    echo '<div class="image-container">
-                <img src="images2/'.$file.'">
-            </div>';
-                }else
-                {
-                   // echo $width.'--'.$height. 'height bigger <br>';
-                    echo '<div class="image-container tall">
-                    <img src="images2/'.$file.'">
-                </div>';
-                }
-                
-           
-            
-            }
-            closedir($handle);
-            
-        }
-        }
-       }
-        $path = "images";
+    function loadList(list, parent) {
+      list.forEach(src => addImage(src, parent));
+    }
 
-        if ($handle = opendir($path)) {
-            while (false !== ($file = readdir($handle))) {
-                if ('.' === $file) continue;
-                if ('..' === $file) continue;
-                
+    fetch('images.json')
+      .then(r => r.json())
+      .then(data => {
+        const gallery = document.getElementById('gallery');
+        loadList(data.images, gallery);
 
-                // do something with the file
-                $img = 'images/'.$file;
-                $exif = exif_read_data('images/'.$file); //read extra data about each picture
-
-               
-                if($exif['Orientation'] == 8) {
-                    list($width, $height, $type, $attr) = getimagesize($img);
-                }else{
-                    list($height, $width, $type, $attr) = getimagesize($img);
-                }
-                
-                
-                
-            
-                
-            
-                if ($width > $height )
-                {
-                   // echo 'image '.$file.':   '.$width.'--'.$height. 'width bigger <br>';
-                    echo '<div class="image-container">
-                <img src="images/'.$file.'">
-            </div>';
-                }else
-                {
-                   // echo $width.'--'.$height. 'height bigger <br>';
-                    echo '<div class="image-container tall">
-                    <img src="images/'.$file.'">
-                </div>';
-                }
-                
-           
-            
-            }
-            closedir($handle);
-            
-        }    
-      ?>
-    </div>
-    <a href="gallery.php?more_pics=1"><button class="gallery_button">Παλαιότερες</button></a>
-    </main>
+        const btn = document.getElementById('load-more');
+        btn.addEventListener('click', () => {
+          if (!showMore && data.images2) {
+            loadList(data.images2, gallery);
+            showMore = true;
+            btn.style.display = 'none'; // hide or change text as needed
+          }
+        });
+      })
+      .catch(err => console.error('Failed to load images.json', err));
+  </script>
   </body>

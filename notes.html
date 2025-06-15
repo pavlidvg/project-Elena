@@ -156,53 +156,14 @@
   
     <main>
 
+  <h1>Αφιερώσεις</h1>
 
 <div class="love-notes-container">
     <!-- Love Note 1 -->
-    
-    <?php
-      require_once __DIR__ . '/vendor/autoload.php'; // Composer autoload
-
-      $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-      $dotenv->load();
-      
-      //get credentials from .env file
-      $hostname = $_ENV['DB_HOST'];
-      $username = $_ENV['DB_USER'];
-      $password = $_ENV['DB_PASS'];
-      $database = $_ENV['DB_NAME'];
-      
-      // Create a database connection
-      $connection = mysqli_connect($hostname, $username, $password, $database);
-      
-      // Check the connection
-      if (!$connection) {
-          die("Connection failed: " . mysqli_connect_error());
-      }
-
-      if ($_SERVER['REQUEST_METHOD'] === 'GET')
-      {
-        if (isset($_GET['show_post']))
-        {
-            $id = $_GET['show_post'];
-             
-    // Query to select post
-      $query = "SELECT * FROM post WHERE id ='$id'";
-                
-      // Perform the query
-      $result = mysqli_query($connection, $query);
-
-      //load everything into a variable
-      if($row = $result->fetch_assoc()){
-       echo '<div class ="post_text_container">';
-        echo '<h1>'.$row['title'].'</h1>';
-        echo $row['body'];
-        echo '</div>';
-      }
-
-        }
-      }
-    ?>
+    <a class="love_note" href="welcome_post.html"><div class="love-note">
+    <h2 class="love-note-title">Γειααααα</h2>
+    <p class="love-note-preview">Πριν πω οτιδείποτε άλλο, οφείλω να παραδεχτώ...</p>
+     </div></a>
    
 
   
