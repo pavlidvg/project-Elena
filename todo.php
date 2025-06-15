@@ -318,131 +318,173 @@
               <img class="heading__img" src="heart-svgrepo-com.svg">
               <h1 class="heading__title">Η λίστα μας</h1>
             </div>
-            <form action = "todo.php" method = "post" class="form">
-              <div>
-                <label class="form__label" for="todo">~ Δραστηρίοτητες με το γλυκάκι μου ~</label>
-                <input class="form__input"
-                     type="text"
-                     id="todo"
-                     name="to-do"
-                     size="30"
-                     required>
-                <button class="button" type ="submit"><span>Πρόσθεσε</span></button>
-              </div>
-            </form>
-            <br>
-            <br>
-            <div>
-              <ul class="toDoList">
-                <?php
-                require_once __DIR__ . '/vendor/autoload.php'; // Composer autoload
+            <div class="todo-wrapper">
+  <div class="form_label">🌸 Δραστηρίοτητες με το γλυκάκι μου 🌸</div>
+  <br>
+  <form id="todo-form">
+    <input type="text" id="todo-input" placeholder="Write something cute..." required />
+    <button type="button">Add</button>
+  </form>
+  <ul id="todo-list"></ul>
+</div>
 
-                $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-                $dotenv->load();
-                
-                //get credentials from .env file
-                $hostname = $_ENV['DB_HOST'];
-                $username = $_ENV['DB_USER'];
-                $password = $_ENV['DB_PASS'];
-                $database = $_ENV['DB_NAME'];
-        
-                
-                
-                // Create a database connection
-                $connection = mysqli_connect($hostname, $username, $password, $database);
-                
-                // Check the connection
-                if (!$connection) {
-                    die("Connection failed: " . mysqli_connect_error());
-                }
-                
+<style>
+  .todo-wrapper {
+    background-color: #fff0f5;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: auto;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+  }
 
-                if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-                if (isset($_GET['list_item_clicked']))
-                {
-                  $id = $_GET['list_item_clicked'];
+  .todo-wrapper h2 {
+    text-align: center;
+    color: #ff66b2;
+    margin-bottom: 20px;
+  }
 
-                  $query = "SELECT * FROM list WHERE id='$id'";
-                  $query_result = mysqli_query($connection, $query); //get the item using the query
-                  $item = mysqli_fetch_assoc($query_result); //take first row, it sohuld be the only row since we're matching by id
+  #todo-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
 
-                  
-                  
-                  //this if block just changes the 'done' boolean on the database
-                  if ($item['done']==1 )
-                  {
-                    $query = "UPDATE list SET done = 0 WHERE id='$id'";
-                  
-                  }else
-                  {
-                    $query = "UPDATE list SET done = 1 WHERE id='$id'";
-                  
-                  }
-                  $query_result = mysqli_query($connection, $query); //get the item using the query
-                 
+  #todo-input {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid #ffb3d9;
+    border-radius: 12px;
+    font-size: 16px;
+  }
 
+  #todo-form button {
+    background-color: #ff66b2;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
 
-                }else if (isset($_GET['list_item_delete']))
-                {
-                  $id = $_GET['list_item_delete'];
+  #todo-form button:hover {
+    background-color: #ff3399;
+  }
 
-                  $query = "DELETE FROM list WHERE id='$id'";
-                  $query_result = mysqli_query($connection, $query); //delete item with that id
-                }
-                
-                
-                
-                }
+  #todo-list {
+    list-style: none;
+    padding: 0;
+  }
 
-                // Query to select the "username" column from the "user" table
-                $query = "SELECT * FROM list";
-                
-                // Perform the query
-                $result = mysqli_query($connection, $query);
-        
-                //load everything into announcement variable
-                while ($row = $result->fetch_assoc())
-                {
-                    $list[] = $row; 
-                }
+  #todo-list li {
+    background-color: #ffe6f0;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s;
+  }
 
-                if (isset($list))
-                {
-                  foreach ($list as $item) // show to-do items
-                  {
-                    if ($item['done'] == 1)
-                    {
-                     // echo'<a href ="todo.php?list_item_clicked=2'.$item['id'].'"><li class="toDoList2">'.$item['title'].'</li><a>';
-                     echo'<li class="toDoList2"><a class="toDoList2" href ="todo.php?list_item_clicked='.$item['id'].'">'.$item['title'].'</a></li>';
-                     
-                    }else
-                    {
-                      //echo'<a href ="todo.php?list_item_clicked=2'.$item['id'].'"><li>'.$item['title'].'</li><a>';
-                      echo'<li><a href ="todo.php?list_item_clicked='.$item['id'].'">'.$item['title'].'</a></li>';
-                    }
-                  }
-                    foreach ($list as $item) //show links to delete, they will be added in second row
-                  {
-                    echo '<li class="toDoList"><a class="toDoList" href="todo.php?list_item_delete='.$item['id'].'">[X]</a></li>';
-                  }
-              }
-                ?>
-              </ul>
-            </div>
-          </section>
+  #todo-list li:hover {
+    transform: scale(1.02);
+  }
 
-    </main>
-    <?php
+  .completed {
+    text-decoration: line-through;
+    color: #888;
+    font-style: italic;
+  }
 
-if ( $_SERVER["REQUEST_METHOD"] == "POST") //after form submission
-{
-    if (isset($_POST['to-do']))
-    {
-      $new_item = $_POST['to-do'];
-      $query = "INSERT INTO list (title,done) VALUES('$new_item','0')";
-      $result = mysqli_query($connection, $query); //add into the db
-      echo "<meta http-equiv='refresh' content='0'>"; //refresh
+  .actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .done-btn,
+  .delete-btn {
+    background-color: #ffb3d9;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .done-btn:hover {
+    background-color: #cc66a3;
+    color: white;
+  }
+
+  .delete-btn:hover {
+    background-color: #ff80bf;
+  }
+</style>
+
+<script>
+  const form = document.getElementById('todo-form');
+  const input = document.getElementById('todo-input');
+  const list = document.getElementById('todo-list');
+
+  let todos = [];
+
+  function renderList() {
+    list.innerHTML = '';
+    todos.forEach((todo, index) => {
+      const li = document.createElement('li');
+      const text = document.createElement('span');
+      text.textContent = todo.text;
+      if (todo.done) text.classList.add('completed');
+
+      const actions = document.createElement('div');
+      actions.className = 'actions';
+
+      const doneBtn = document.createElement('button');
+      doneBtn.textContent = '✔️';
+      doneBtn.className = 'done-btn';
+      doneBtn.onclick = () => {
+        todos[index].done = !todos[index].done;
+        renderList();
+      };
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = '🗑️';
+      deleteBtn.className = 'delete-btn';
+      deleteBtn.onclick = () => {
+        todos.splice(index, 1);
+        renderList();
+      };
+
+      actions.appendChild(doneBtn);
+      actions.appendChild(deleteBtn);
+
+      li.appendChild(text);
+      li.appendChild(actions);
+      list.appendChild(li);
+    });
+  }
+
+  form.onsubmit = (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (text) {
+      todos.push({ text, done: false });
+      input.value = '';
+      renderList();
     }
-}
-    ?>
+  };
+
+  // Optional default tasks
+  todos = [
+    { text: '🧁 Bake pink cupcakes', done: false },
+    { text: '🧸 Cuddle my plushies', done: false },
+    { text: '🪞 Do self-care', done: true }
+  ];
+
+  renderList();
+</script>
   </body>
